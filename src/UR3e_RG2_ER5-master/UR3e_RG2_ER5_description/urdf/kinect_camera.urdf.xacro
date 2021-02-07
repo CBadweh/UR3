@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="camera_deep">
+<!--
+ Reference Link: http://gazebosim.org/tutorials?tut=ros_gzplugins 
+-->
+<xacro:macro name="camera_deep" params="parent prefix">
+<xacro:property name="camera_value" value="0.1"/>
+
+
+
+<joint name="camera_joint" type="continuous">
+  <axis xyz="0 0 1"/>
+  <!-- the rpy parameter = "rotate about x y z" -->
+  <origin xyz="1.5 0 1.0" rpy="0 0.1 ${pi}"/>
+  <parent link="${parent}"/>
+  <child link="camera_link"/>
+</joint>
+
+
+
+
+
+<link name="camera_link">
+<visual>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <geometry>
+    <!-- <box size="${camera_value} ${camera_value} ${camera_value}"/> -->
+    <mesh filename="package://UR3e_RG2_ER5_vision/kinect_camera/meshes/kinect.dae"/>
+  </geometry>
+</visual>
+<collision>
+ <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+ <geometry>
+  <!-- <box size="${camera_value} ${camera_value} ${camera_value}"/> -->
+   <mesh filename="package://UR3e_RG2_ER5_vision/kinect_camera/meshes/kinect.dae"/>
+ </geometry>
+</collision>
+<inertial>
+  <mass value="0.17"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <inertia ixx="0.001152" ixy="0" ixz="0" iyy="0.0001489" iyz="0" izz="0.0011"/>
+</inertial>
+</link>
+
+
+
+
+
+
+
+<gazebo reference="camera_link">
+  <sensor name="camera" type="depth">
+  	<!-- pose postion z x y -->
+  	<pose frame="camera_link">0.0 0.0 0.0 0.0 0 0.0</pose>
+    <update_rate>20</update_rate>
+    <camera>
+      <!-- <horizontal_fov>1.047198</horizontal_fov> -->
+      <image>
+        <width>640</width>
+        <height>480</height>
+        <format>R8G8B8</format>
+      </image>
+      <clip>
+        <near>0.05</near>
+        <far>3</far>
+      </clip>
+    </camera>
+    <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
+      <baseline>0.2</baseline>
+      <alwaysOn>true</alwaysOn>
+      <updateRate>1.0</updateRate>
+      <!-- Andrew's original name -->
+  <!--     <cameraName>kinect2/camerad</cameraName>
+      <imageTopicName>/kinect2/qhd/image_color</imageTopicName>
+      <cameraInfoTopicName>/kinect2/qhd/camera_info</cameraInfoTopicName>
+      <depthImageTopicName>/kinect2/sd/image_depth</depthImageTopicName>
+      <depthImageInfoTopicName>/kinect2/sd/camera_info</depthImageInfoTopicName>
+      <pointCloudTopicName>/kinect2/camerad/depth/points</pointCloudTopicName>
+      <frameName>camera_link</frameName> -->
+      <cameraName>camera_ir</cameraName>
+      <imageTopicName>/camera/color/image_raw</imageTopicName>
+      <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
+      <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+      <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
+      <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+      <frameName>kinect_optical_link</frameName>
+      <pointCloudCutoff>0.5</pointCloudCutoff>
+      <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+      <distortionK1>0.00000001</distortionK1>
+      <distortionK2>0.00000001</distortionK2>
+      <distortionK3>0.00000001</distortionK3>
+      <distortionT1>0.00000001</distortionT1>
+      <distortionT2>0.00000001</distortionT2>
+      <CxPrime>0</CxPrime>
+      <Cx>0</Cx>
+      <Cy>0</Cy>
+      <focalLength>0</focalLength>
+      <hackBaseline>0</hackBaseline>
+    </plugin>
+  </sensor>
+</gazebo>
+
+
+
+
+
+
+<!-- C code 
+    Begin: to control/move the camera in gazebo
+setup the gazebo plugin for the camera link/joing -->
+
+<gazebo>
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    <robotNamespace></robotNamespace>
+  </plugin>
+</gazebo>
+
+<!--   add transmission block to join that we wish Gazebo to actuate
+ -->
+<transmission name="camera_control">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="camera_joint">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="motor1">
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+<!-- End: of ros_control on camera join
+ -->
+
+
+
+ <!-- Begin: Create Dummy link to correct pointcloud orientation-->
+
+<joint name="kinect_optical_joint" type="fixed">
+  <axis xyz="0 0 1"/>
+  <!-- the rpy parameter = "rotate about x y z" -->
+  <origin xyz="1.5 0 1.2" rpy="0 0 ${pi}"/>
+  <parent link="camera_link"/>
+  <child link="kinect_optical_link"/>
+</joint>
+
+<link name="kinect_optical_link">
+<visual>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <geometry>
+    <box size="0.05 0.05 0.05"/>
+  </geometry>
+</visual>
+<collision>
+ <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+ <geometry>
+  <box size="0.05 0.05 0.05"/>
+ </geometry>
+</collision>
+<inertial>
+  <mass value="0.17"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <inertia ixx="0.001152" ixy="0" ixz="0" iyy="0.0001489" iyz="0" izz="0.0011"/>
+</inertial>
+</link>
+
+<!-- End: of creating a dummy link -->
+
+
+
+
+
+
+</xacro:macro>
+</robot>

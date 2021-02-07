@@ -1,0 +1,108 @@
+
+<!-- 
+PCL tutorial ConvexHull planar surface reconstruction
+source: https://wiki.ros.org/pcl_ros/Tutorials/ConvexHull%20planar%20surface%20reconstruction
+ -->
+
+
+
+
+<!-- 
+The following launch file starts a nodelet manager together with a VoxelGrid PCL filter nodelet. The input PointCloud2 topic is set to /camera/depth/points.
+
+The default filtering values are set to filter data on the z-axis between 0.01 and 1.5 meters, and downsample the data with a leaf size of 0.01 meters.
+
+The segmentation is performed by first estimating surface normals at each point for a support of 0.015 meters, and then using a RANSAC-based estimator for fitting planes with a threshold of 0.1 meters, and a normal deviation of ~5 degrees (0.09 radians).
+
+The convex hull of the projected planar inliers is estimated and published on the /convex_hull/output topic. 
+ -->
+
+
+<launch>
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node pkg="nodelet" type="nodelet" name="voxel_grid" args="load pcl/VoxelGrid pcl_manager" output="screen">
+    <remap from="~input" to="/camera/depth/points" />
+    <rosparam>
+      filter_field_name: z
+      filter_limit_min: 0.01
+      filter_limit_max: 1.5
+      filter_limit_negative: False
+      leaf_size: 0.01
+    </rosparam>
+  </node>
+
+  <!-- Estimate point normals -->
+  <node pkg="nodelet" type="nodelet" name="normal_estimation" args="load pcl/NormalEstimation pcl_manager" output="screen">
+    <remap from="~input" to="/voxel_grid/output" />
+    <rosparam>
+      # -[ Mandatory parameters
+      k_search: 0
+      radius_search: 0.015
+      # Set the spatial locator. Possible values are: 0 (ANN), 1 (FLANN), 2 (organized)
+      spatial_locator: 0
+    </rosparam>
+  </node>
+
+  <!-- Segment the table plane -->
+  <node pkg="nodelet" type="nodelet" name="planar_segmentation" args="load pcl/SACSegmentationFromNormals pcl_manager" output="screen">
+    <remap from="~input"   to="/voxel_grid/output" />
+    <remap from="~normals" to="/normal_estimation/output" />
+    <rosparam>
+      # -[ Mandatory parameters
+
+      # model_type:
+      # 0: SACMODEL_PLANE
+      # 1: SACMODEL_LINE
+      # 2: SACMODEL_CIRCLE2D
+      # 3: SACMODEL_CIRCLE3D
+      # 4: SACMODEL_SPHERE
+      # 5: SACMODEL_CYLINDER
+      # 6: SACMODEL_CONE
+      # 7: SACMODEL_TORUS
+      # 8: SACMODEL_PARALLEL_LINE
+      # 9: SACMODEL_PERPENDICULAR_PLANE
+      # 10: SACMODEL_PARALLEL_LINES
+      # 11: SACMODEL_NORMAL_PLANE
+      # 12: SACMODEL_NORMAL_SPHERE
+      # 13: SACMODEL_REGISTRATION
+      # 14: SACMODEL_REGISTRATION_2D
+      # 15: SACMODEL_PARALLEL_PLANE
+      # 16: SACMODEL_NORMAL_PARALLEL_PLANE
+      # 17: SACMODEL_STICK
+      model_type: 5
+      distance_threshold: 0.01
+      max_iterations: 1000
+      method_type: 0
+      optimize_coefficients: true
+      normal_distance_weight: 0.1
+      eps_angle: 0.09
+    </rosparam>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="extract_plane_indices" args="load pcl/ExtractIndices pcl_manager" output="screen">
+    <remap from="~input"   to="/voxel_grid/output" />
+    <remap from="~indices" to="/planar_segmentation/inliers" />
+    <rosparam>
+      negative: true
+    </rosparam>
+  </node>
+
+  <!-- Project the planar inliers -->
+  <node pkg="nodelet" type="nodelet" name="project_plane_inliers" args="load pcl/ProjectInliers pcl_manager" output="screen">
+   <remap from="~input"   to="/voxel_grid/output" />
+   <remap from="~indices" to="/planar_segmentation/inliers" />
+   <remap from="~model"   to="/planar_segmentation/model" />
+   <rosparam>
+     model_type: 5
+     copy_all_data: false
+     copy_all_fields: true
+   </rosparam>
+  </node>
+
+  <!-- Compute the convex hull -->
+  <node pkg="nodelet" type="nodelet" name="convex_hull" args="load pcl/ConvexHull2D pcl_manager" output="screen">
+    <remap from="~input"   to="/project_plane_inliers/output" />
+  </node>
+</launch>

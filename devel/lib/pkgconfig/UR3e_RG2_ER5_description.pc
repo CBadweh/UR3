@@ -1,0 +1,8 @@
+prefix=/home/cbadweh/UR3/devel
+
+Name: UR3e_RG2_ER5_description
+Description: Description of UR3e_RG2_ER5_description
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/cbadweh/UR3/install
+
+Name: UR3e_RG2_ER5_gripper_gazebo
+Description: Description of UR3e_RG2_ER5_gripper_gazebo
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

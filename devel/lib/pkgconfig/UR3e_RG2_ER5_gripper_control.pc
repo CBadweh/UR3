@@ -1,0 +1,8 @@
+prefix=/home/cbadweh/UR3/devel
+
+Name: UR3e_RG2_ER5_gripper_control
+Description: Description of UR3e_RG2_ER5_gripper_control
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: rospy control_msgs

@@ -1,0 +1,8 @@
+prefix=/home/cbadweh/UR3/install
+
+Name: UR3e_RG2_ER5_pick_place
+Description: Description of UR3e_RG2_ER5_pick_place
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: moveit_core moveit_ros_planning_interface interactive_markers
