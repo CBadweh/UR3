@@ -6,6 +6,24 @@
 
 #IncludeRegexTransform: 
 
+/home/cbadweh/UR3/devel/include/UR3e_RG2_ER5_vision/UR3Msg.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+geometry_msgs/Pose.h
+-
+
 /home/cbadweh/UR3/src/UR3e_RG2_ER5-master/UR3e_RG2_ER5_vision/src/PLC_pipeline.cpp
 pcl/visualization/cloud_viewer.h
 -
@@ -73,6 +91,8 @@ visualization_msgs/Marker.h
 -
 cmath
 -
+UR3e_RG2_ER5_vision/UR3Msg.h
+/home/cbadweh/UR3/src/UR3e_RG2_ER5-master/UR3e_RG2_ER5_vision/src/UR3e_RG2_ER5_vision/UR3Msg.h
 
 /opt/ros/noetic/include/geometry_msgs/Point.h
 string

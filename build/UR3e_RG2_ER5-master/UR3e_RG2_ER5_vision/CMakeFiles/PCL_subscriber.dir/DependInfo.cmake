@@ -17,12 +17,15 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/home/cbadweh/UR3/devel/include"
+  "/home/cbadweh/UR3/src/UR3e_RG2_ER5-master/UR3e_RG2_ER5_vision/include"
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/eigen3"
   "/usr/include/pcl-1.10"
   "/usr/include/vtk-7.1"
   "/usr/include/freetype2"
+  "/home/cbadweh/UR3/src/UR3e_RG2_ER5-master/UR3e_RG2_ER5_vision/msg"
   )
 
 # Targets to which this target links.

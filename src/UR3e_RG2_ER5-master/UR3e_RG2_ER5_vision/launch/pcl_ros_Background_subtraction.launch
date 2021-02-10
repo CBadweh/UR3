@@ -3,6 +3,7 @@
 
   <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
 
+
   <!-- Run a passthrough filter to clean NaNs -->
   <node pkg="nodelet" type="nodelet" name="passthroughZ" args="load pcl/PassThrough pcl_manager" output="screen">
     <remap from="~input" to="/camera/depth/points" />
@@ -42,6 +43,7 @@
   <!-- Estimate point normals -->
   <node pkg="nodelet" type="nodelet" name="normal_estimation" args="load pcl/NormalEstimation pcl_manager" output="screen">
     <remap from="~input" to="/voxel_grid/output" />
+    
     <rosparam>
       # -[ Mandatory parameters
       k_search: 0
@@ -103,12 +105,6 @@
       negative: true
     </rosparam> -->
   </node>
-
-
-
-
-
-
 
 
 

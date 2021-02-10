@@ -207,7 +207,7 @@ def img_segmentation(clean_image, object_image):
     # This value can fall into the range [-1, 1] with a value of one being a “perfect match”.
     (score, diff) = compare_ssim(grayA, grayB, full=True)
     diff = (diff * 255).astype("uint8")
-    print("score {}".format(score))
+    # print("score {}".format(score))
 
     # === Threshold the difference image=================
     # followed by finding contours to

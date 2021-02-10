@@ -40,7 +40,10 @@
 #include <visualization_msgs/Marker.h>
 #include <cmath>
 
-ros::Publisher pub, markers_pub_;
+// #include "UR3e_RG2_ER5_vision/Msg.h"
+#include "UR3e_RG2_ER5_vision/UR3Msg.h"
+
+ros::Publisher pub, pub2, markers_pub_;
 
 void cloud_cb(const sensor_msgs::PointCloud2::ConstPtr &msg){
 
@@ -108,6 +111,16 @@ void cloud_cb(const sensor_msgs::PointCloud2::ConstPtr &msg){
   pcl::toROSMsg(*cloud_msg,cloud_publish);
   pub.publish(cloud_publish);
 
+  //======== PUBLISHING OBJECT OF INTERESTED POSE AND RADIUS =========
+  // init Ojb of interested's message type 
+  UR3e_RG2_ER5_vision::UR3Msg UR3_msg;
+  UR3_msg.Obj_name = "Detected_Obj";
+  UR3_msg.Obj_Pose.position.x =  (max_point_AABB.x + min_point_AABB.x)/2;
+  UR3_msg.Obj_Pose.position.y =  (max_point_AABB.y + min_point_AABB.y)/2;
+  UR3_msg.Obj_Pose.position.z =  (max_point_AABB.z + min_point_AABB.z)/2;
+  // Radius in y axis
+  UR3_msg.Radius = (max_point_AABB.y - min_point_AABB.y)/2;
+  pub2.publish(UR3_msg);
   //============Visualisation Marker=============
   //                  AABB
 
@@ -147,26 +160,17 @@ void cloud_cb(const sensor_msgs::PointCloud2::ConstPtr &msg){
 
 
 
-
-
-
-
-
-
-
-
-
-
 int
 main (int argc, char** argv)
 {
   // Initialize ROS
-  ros::init (argc, argv, "my_pcl_tutorial");
+  ros::init (argc, argv, "Analyzing_Obj");
   ros::NodeHandle nh;
   // Create a ROS subscriber for the input point cloud
   ros::Subscriber sub = nh.subscribe ("/extract_plane_indices/output", 200, cloud_cb);  //topic subscribe to
   // Create a ROS publisher for the output point cloud
   pub = nh.advertise<sensor_msgs::PointCloud2> ("cloud_publish_by_C", 100);
+  pub2 = nh.advertise<UR3e_RG2_ER5_vision::UR3Msg> ("Object_Of_Interested", 100);
   markers_pub_ = nh.advertise<visualization_msgs::MarkerArray> ("msg_marker", 100);
     ros::spin();
   ros::spin ();

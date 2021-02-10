@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
-catkin_package()
+#catkin_package()
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -14,46 +14,46 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  geometry_msgs
   sensor_msgs
   pcl_ros
 
 )
 
 
-###################################
-## catkin specific configuration ##
-###################################
-## The catkin_package macro generates cmake config files for your package
-## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if your package contains header files
-## LIBRARIES: libraries you create in this project that dependent projects also need
-## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES UR3e_RG2_ER5_description
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+add_message_files(
+  FILES
+  UR3Msg.msg
 )
 
-###########
-## Build ##
-###########
+generate_messages(
+  DEPENDENCIES
+  geometry_msgs
+  std_msgs
+)
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
+catkin_package(
+
+	CATKIN_DEPENDS message_runtime
+)
+
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
   #added folder 
   #/usr/include/pcl-1.8  
   #/usr/include/eigen3
+  /home/cbadweh/UR3/src/UR3e_RG2_ER5-master/UR3e_RG2_ER5_vision/msg
 )
 
 
 add_executable(PCL_subscriber src/PCL_subscriber.cpp)
 add_dependencies(PCL_subscriber UR3e_RG2_ER5_vision_generate_messages_cpp)
 target_link_libraries(PCL_subscriber ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(PCL_publisher src/PCL_publisher.cpp)
+add_dependencies(PCL_publisher UR3e_RG2_ER5_vision_generate_messages_cpp)
+target_link_libraries(PCL_publisher ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 #add_executable(PCL_Visualizer src/PCL_Visualizer.cpp)
 #target_link_libraries(PCL_Visualizer ${catkin_LIBRARIES})

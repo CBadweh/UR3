@@ -3,6 +3,6 @@ prefix=/home/cbadweh/UR3/devel
 Name: UR3e_RG2_ER5_vision
 Description: Description of UR3e_RG2_ER5_vision
 Version: 0.0.0
-Cflags: 
+Cflags: -I/home/cbadweh/UR3/devel/include
 Libs: -L${prefix}/lib 
-Requires: 
+Requires: message_runtime

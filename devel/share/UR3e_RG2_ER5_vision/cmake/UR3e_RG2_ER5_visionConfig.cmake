@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(UR3e_RG2_ER5_vision_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT " " STREQUAL " ")
+if(NOT "/home/cbadweh/UR3/devel/include " STREQUAL " ")
   set(UR3e_RG2_ER5_vision_INCLUDE_DIRS "")
-  set(_include_dirs "")
+  set(_include_dirs "/home/cbadweh/UR3/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/cbadweh/UR3/devel/lib;/home/cbadweh/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/cbadweh/UR3/devel/lib;/home/cbadweh/UR3/devel/lib;/home/cbadweh/catkin_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(UR3e_RG2_ER5_vision_EXPORTED_TARGETS "")
+set(UR3e_RG2_ER5_vision_EXPORTED_TARGETS "UR3e_RG2_ER5_vision_generate_messages_cpp;UR3e_RG2_ER5_vision_generate_messages_eus;UR3e_RG2_ER5_vision_generate_messages_lisp;UR3e_RG2_ER5_vision_generate_messages_nodejs;UR3e_RG2_ER5_vision_generate_messages_py")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${UR3e_RG2_ER5_vision_EXPORTED_TARGETS})
   if(NOT TARGET ${t})
@@ -185,7 +185,7 @@ foreach(t ${UR3e_RG2_ER5_vision_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "")
+set(depends "message_runtime")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls
@@ -214,7 +214,7 @@ foreach(depend ${depends})
   list(APPEND UR3e_RG2_ER5_vision_EXPORTED_TARGETS ${${UR3e_RG2_ER5_vision_dep}_EXPORTED_TARGETS})
 endforeach()
 
-set(pkg_cfg_extras "")
+set(pkg_cfg_extras "UR3e_RG2_ER5_vision-msg-extras.cmake")
 foreach(extra ${pkg_cfg_extras})
   if(NOT IS_ABSOLUTE ${extra})
     set(extra ${UR3e_RG2_ER5_vision_DIR}/${extra})
