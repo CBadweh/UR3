@@ -1,0 +1,76 @@
+
+
+<!-- Usage: This launch file launch the pcl passthorugh nodelet, given point clould, this nodelet filter passthough distance between min and max.
+
+Ref: http://wiki.ros.org/pcl_ros/Tutorials/PassThrough%20filtering
+
+for More pcl filter 
+https://wiki.ros.org/pcl_ros/Tutorials/filters#PassThrough
+
+for Demo: 
+https://github.com/NU-MSR/nodelet_pcl_demo
+
+for pcl_ros C++ code to publish and subscribe
+http://wiki.ros.org/pcl_ros
+
+-->
+
+
+<launch>
+  <node pkg="nodelet" type="nodelet" name="pcl_manager" args="manager" output="screen" />
+
+  <!-- Run a passthrough filter to clean NaNs -->
+  <node pkg="nodelet" type="nodelet" name="passthroughZ" args="load pcl/PassThrough pcl_manager" output="screen">
+    <remap from="~input" to="/camera/depth/points" />
+    <rosparam>
+      filter_field_name: z
+      filter_limit_min: 1.0
+      filter_limit_max: 1.44
+      filter_limit_negative: False
+    </rosparam>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="passthroughY" args="load pcl/PassThrough pcl_manager" output="screen">
+    <remap from="~input" to="/passthroughZ/output" />
+    <rosparam>
+      filter_field_name: y
+      filter_limit_min: 0.07
+      filter_limit_max: 0.43
+      filter_limit_negative: False
+    </rosparam>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="passthroughX" args="load pcl/PassThrough pcl_manager" output="screen">
+    <remap from="~input" to="/passthroughY/output" />
+    <rosparam>
+      filter_field_name: x
+      filter_limit_min: 0.07
+      filter_limit_max: 0.43
+      filter_limit_negative: False
+    </rosparam>
+  </node>
+
+
+
+<!-- =========================================================
+Begin: Extrace Indicies 
+=========================================== -->
+
+<!-- Extract Inlier points -->
+<!-- <node pkg="nodelet" type="nodelet" name="extract_plane" args="load pcl/ExtractIndices pcl_manager" output="screen">
+  <remap from="~input" to="/voxel_grid/output"/>
+  <remap from="~indices" to="/sac_plane/inliers"/>
+  <rosparam>
+    negative: true
+    approximate_sync: true
+</rosparam>
+</node> -->
+
+<!-- End: Extrace Indicies ================== -->
+
+
+
+
+
+</launch>
+

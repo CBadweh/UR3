@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="background_subtract" pkg="UR3e_RG2_ER5_vision" type="kinect_bksubtract.py" output="screen"/>
+  <node name="segmentation" pkg="UR3e_RG2_ER5_vision" type="image_segmenting.py" output="screen"/>
+  <!-- <node pkg="tf" type="static_transform_publisher" name="cameralink_broadcaster" args="1 0 0 0 0 0 1 world camera_link 100" /> -->
+</launch>
