@@ -24,6 +24,11 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   UR3Msg.msg
+  UR3CV.msg
+  UR3Numpy.msg
+  UR3CVKeypoints.msg
+  UR3CVKeypointsVector.msg
+
 )
 
 generate_messages(
