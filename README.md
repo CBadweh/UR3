@@ -28,7 +28,7 @@ $rosrun UR3e_RG2_ER5_vision PLC_pipeline
 
 $roscd UR3e_RG2_ER5_vision
 
-$rosrun UR3e_RG2_ER5_vision Background_Subtraction_node.py
+$rosrun UR3e_RG2_ER5_vision BG_OpenCV
 
-$rosrun UR3e_RG2_ER5_vision OpenCV_BGS_Color_SIFT_7th.py
+
 
