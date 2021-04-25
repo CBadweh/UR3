@@ -28,6 +28,7 @@ add_message_files(
   UR3Numpy.msg
   UR3CVKeypoints.msg
   UR3CVKeypointsVector.msg
+  UR3Color.msg
 
 )
 
@@ -52,22 +53,22 @@ include_directories(
 )
 
 
-add_executable(PCL_subscriber src/PCL_subscriber.cpp)
-add_dependencies(PCL_subscriber UR3e_RG2_ER5_vision_generate_messages_cpp)
-target_link_libraries(PCL_subscriber ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+#add_executable(PCL_subscriber src/PCL_subscriber.cpp)
+#add_dependencies(PCL_subscriber UR3e_RG2_ER5_vision_generate_messages_cpp)
+#target_link_libraries(PCL_subscriber ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
-add_executable(PCL_publisher src/PCL_publisher.cpp)
-add_dependencies(PCL_publisher UR3e_RG2_ER5_vision_generate_messages_cpp)
-target_link_libraries(PCL_publisher ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+#add_executable(PCL_publisher src/PCL_publisher.cpp)
+#add_dependencies(PCL_publisher UR3e_RG2_ER5_vision_generate_messages_cpp)
+#target_link_libraries(PCL_publisher ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 #add_executable(PCL_Visualizer src/PCL_Visualizer.cpp)
 #target_link_libraries(PCL_Visualizer ${catkin_LIBRARIES})
 #add_dependencies(PCL_Visualizer ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 
-add_executable(publisher_subscriber_demo src/publisher_subscriber_demo.cpp)
-target_link_libraries(publisher_subscriber_demo ${catkin_LIBRARIES})
-add_dependencies(publisher_subscriber_demo ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+#add_executable(publisher_subscriber_demo src/publisher_subscriber_demo.cpp)
+#target_link_libraries(publisher_subscriber_demo ${catkin_LIBRARIES})
+#add_dependencies(publisher_subscriber_demo ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 add_executable(PLC_pipeline src/PLC_pipeline.cpp)
 target_link_libraries(PLC_pipeline ${catkin_LIBRARIES})
